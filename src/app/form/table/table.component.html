@@ -1,0 +1,13 @@
+<h1>Table</h1>
+<div style="width: 50%">
+  <ngx-datatable [rows]="rows" class="material" 
+  [headerHeight]="40"
+  [rowHeight]="30"
+  [columnMode]="'force'">
+      <ngx-datatable-column name="Name"></ngx-datatable-column>
+      <ngx-datatable-column name="Email"></ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<div>
+  <a href="" (click)="clear()">Clear Local Storage</a>
+</div>
