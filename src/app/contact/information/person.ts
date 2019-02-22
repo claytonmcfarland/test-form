@@ -1,18 +1,16 @@
-
 export class person {
-    private name: string;
-    private email: string;
+  private name: string;
+  private email: string;
 
-    constructor(n: string, e: string){
-        this.name = n;
-        this.email = e;
-    }
+  constructor(data) {
+    Object.assign(this, data);
+  }
 
-    get Name(){
-        return this.name;
-    }
+  get Name() {
+    return this.name;
+  }
 
-    get Email(){
-        return this.email;
-    }
+  get Email() {
+    return this.email;
+  }
 }
