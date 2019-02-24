@@ -1,49 +1,49 @@
 <h1>Contact</h1>
 <form [formGroup]="form" (ngSubmit)="login()">
-    <div *ngIf="form.errors" class="alert alert-danger">
-        There are errors in the form
+  <div *ngIf="form.errors" class="alert alert-danger">
+    There are errors in the form
+  </div>
+  <div class="form-group">
+    <label for="name">Full Name</label>
+    <input formControlName="name" id="name" type="text" class="form-control" />
+    <div *ngIf="name.touched && name.invalid" class="alert alert-danger">
+      <div *ngIf="name.errors.required">Name is required</div>
+      <div *ngIf="name.errors.mustContainSpace">Please input full name</div>
     </div>
-    <div class="form-group">
-        <label for="name">Full Name</label>
-        <input
-            formControlName="name"
-            id="name" 
-            type="text" 
-            class="form-control">
-        <div *ngIf="name.touched && name.invalid" class="alert alert-danger">
-            <div *ngIf="name.errors.required">Name is required</div>
-            <div *ngIf="name.errors.mustContainSpace">Please input full name</div>
-        </div>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      formControlName="email"
+      id="email"
+      type="email"
+      class="form-control"
+    />
+    <div *ngIf="email.touched && email.invalid" class="alert alert-danger">
+      <div *ngIf="email.errors.required">Email is required</div>
+      <div *ngIf="email.errors.email">Invalid Email</div>
     </div>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input 
-            formControlName="email"
-            id="email" 
-            type="email" 
-            class="form-control">
-        <div *ngIf="email.touched && email.invalid" class="alert alert-danger">
-            <div *ngIf="email.errors.required">Email is required</div>
-            <div *ngIf="email.errors.email">Invalid Email</div>
-        </div>
+  </div>
+  <div class="form-group">
+    <label for="number">Phone Number</label>
+    <input
+      formControlName="number"
+      id="number"
+      type="text"
+      class="form-control"
+    />
+    <div *ngIf="number.touched && number.invalid" class="alert alert-danger">
+      <div *ngIf="number.errors.required">Phone number is required</div>
+      <div *ngIf="number.errors.invalidPhoneNumber">
+        Phone number is invalid
+      </div>
     </div>
-    <!--
-    <div class="form-group">
-        <label for="number">Phone Number</label>
-        <input
-            formConrolName="number"
-            id="number"
-            type="text"
-            class="form-control">
-        <div *ngIf="number.touched && number.invalid" class="alert alert-danger">
-            <div *ngIf="number.errors.required">Phone number is required</div>
-            <div *ngIf="number.errors.invalidPhoneNumber">Phone number is invalid</div>
-        </div>
-    </div>
-    -->
-    <span>
-        <button class="btn btn-primary" type="submit">Send</button>
-        <div class="divider"></div>
-        <a href="" (click)="clear()">Clear Local Storage</a>
-    </span>
+  </div>
+  <span>
+    <button [disabled]="form.invalid" class="btn btn-primary" type="submit">
+      Send
+    </button>
+    <div class="divider"></div>
+    <a href="" (click)="clear()">Clear Local Storage</a>
+  </span>
 </form>
