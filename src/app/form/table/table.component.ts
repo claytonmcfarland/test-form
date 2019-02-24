@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-table',
@@ -7,8 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TableComponent implements OnInit {
   rows = [];
+  temp = [];
+  filteredData = [];
+
+  @ViewChild(DatatableComponent) table: DatatableComponent;
 
   ngOnInit() {
+    this.init();
+  }
+
+  init() {
     //get data to be used late
     const data = JSON.parse(localStorage.getItem('items'));
     //console.log(data);
@@ -18,11 +27,50 @@ export class TableComponent implements OnInit {
     data.forEach(element => {
       this.rows.push(element);
     });
+    this.filteredData = this.rows;
+    this.temp = this.rows;
     console.log(this.rows);
   }
 
   clear(){
     localStorage.clear();
+  }
+
+  delete(index: number){
+    let temp = JSON.parse(localStorage.getItem("items"));
+    temp.splice(index, 1);
+    localStorage.setItem("items", JSON.stringify(temp));
+    this.init();
+  }
+
+  filter(event){
+    this.filteredData = this.rows;
+    /*
+    let val = event.target.value.toLowerCase();
+    let colNum = 3;
+    let keys = Object.keys(this.temp[0]);
+    this.temp = this.filteredData.filter(function(item){
+      for (let i=0; i<colNum; i++){
+        if (item[keys[i]].toString().toLowerCase().indexOf(val) !== -1 || !val){
+          return true;
+        }
+      }
+    });
+    this.table.offset = 0;
+    */
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const filteredData = this.temp.filter(function(d) {
+      return d.name.toLowerCase().indexOf(val) !== -1 ||
+       d.email.toLowerCase().indexOf(val) !== -1 ||
+       d.number.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+
+    // update the rows
+    this.rows = filteredData;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
   }
 
 }
