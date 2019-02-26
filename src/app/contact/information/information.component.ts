@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { FormValidators } from "./form.validators";
 import { formArrayNameProvider } from "@angular/forms/src/directives/reactive_directives/form_group_name";
@@ -14,11 +14,19 @@ import { temporaryAllocator } from "@angular/compiler/src/render3/view/util";
   templateUrl: "./information.component.html",
   styleUrls: ["./information.component.css"]
 })
-export class InformationComponent {
+export class InformationComponent implements OnInit {
   form: FormGroup;
+  @Input("data") formData;
+  @Output() savedEvent = new EventEmitter();
+  constructor() {}
 
-  constructor() {
-    this.form = this.buildForm();
+  ngOnInit(): void {
+    console.log("from information component", this.formData);
+    if (this.formData != null) {
+      this.form = this.buildEditForm();
+    } else {
+      this.form = this.buildForm();
+    }
   }
 
   buildForm() {
@@ -30,6 +38,23 @@ export class InformationComponent {
       ]),
       email: new FormControl("", [Validators.required, Validators.email]),
       number: new FormControl("", [
+        Validators.required,
+        FormValidators.invalidPhoneNumber
+      ])
+    });
+  }
+  buildEditForm() {
+    return new FormGroup({
+      name: new FormControl(this.formData.name, [
+        Validators.required,
+        Validators.minLength(3),
+        FormValidators.mustContainSpace
+      ]),
+      email: new FormControl(this.formData.email, [
+        Validators.required,
+        Validators.email
+      ]),
+      number: new FormControl(this.formData.number, [
         Validators.required,
         FormValidators.invalidPhoneNumber
       ])
@@ -56,6 +81,22 @@ export class InformationComponent {
       // this.form.reset();
       this.form = this.buildForm();
     }
+  }
+
+  edit() {
+    let temp: any[] = JSON.parse(localStorage.getItem("items"));
+    var index = temp.findIndex(
+      val =>
+        val.email == this.formData.email &&
+        val.number == this.formData.number &&
+        val.name == this.formData.name
+    );
+    let editPerson = this.form.value;
+    temp[index].name = editPerson.name;
+    temp[index].number = editPerson.number;
+    temp[index].email = editPerson.email;
+    localStorage.setItem("items", JSON.stringify(temp));
+    this.savedEvent.emit();
   }
 
   clear() {

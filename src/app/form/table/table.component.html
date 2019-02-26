@@ -15,8 +15,8 @@
         <ng-template let-row="row" let-rowIndex="rowIndex" let-value="id" ngx-datatable-cell-template>
 
           <mat-menu #appMenu="matMenu">
-            <button mat-menu-item>Edit</button>
-            <button mat-menu-item (click)="delete(rowIndex)">Delete</button>
+            <button mat-menu-item (click)="edit(row)">Edit</button>
+            <button mat-menu-item (click)="delete(row)">Delete</button>
           </mat-menu>
 
           <button mat-button class="btn btn-primary" [matMenuTriggerFor]="appMenu" style="min-height: 1%">
@@ -30,3 +30,5 @@
 <div>
   <a href="" (click)="clear()">Clear Local Storage</a>
 </div>
+
+<!-- <app-form-dialog></app-form-dialog> -->
