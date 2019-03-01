@@ -1,5 +1,5 @@
 <h1>Contact</h1>
-<form [formGroup]="form" (ngSubmit)="login()">
+<form [formGroup]="form">
   <div *ngIf="form.errors" class="alert alert-danger">
     There are errors in the form
   </div>
@@ -40,9 +40,16 @@
     </div>
   </div>
   <span>
-    <button [disabled]="form.invalid" class="btn btn-primary" type="submit">
-      Send
-    </button>
+    <div *ngIf="formData == null">
+      <button [disabled]="form.invalid" class="btn btn-primary" (click)="login()">
+        Send
+      </button>
+    </div>
+    <div *ngIf="formData != null">
+      <button [disabled]="form.invalid" class="btn btn-primary" (click)="edit()">
+        Edit
+      </button>
+    </div>
     <div class="divider"></div>
     <a href="" (click)="clear()">Clear Local Storage</a>
   </span>

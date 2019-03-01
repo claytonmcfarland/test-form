@@ -1,15 +1,20 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { Component, ViewChild, OnInit } from "@angular/core";
+import { DatatableComponent } from "@swimlane/ngx-datatable";
+import { BasePortalHost } from "@angular/cdk/portal";
+import { MatDialog } from "@angular/material/dialog";
+import { FormDialogComponent } from "../form-dialog/form-dialog.component";
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  selector: "app-table",
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.css"]
 })
 export class TableComponent implements OnInit {
   rows = [];
   temp = [];
   filteredData = [];
+
+  constructor(public dialog: MatDialog) {}
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
 
@@ -19,11 +24,15 @@ export class TableComponent implements OnInit {
 
   init() {
     //get data to be used late
-    const data = JSON.parse(localStorage.getItem('items'));
+    const data = JSON.parse(localStorage.getItem("items"));
+    if (!data) {
+      alert("No data to display");
+      return;
+    }
     //console.log(data);
 
     //add data to the table
-    this.rows=[];
+    this.rows = [];
     data.forEach(element => {
       this.rows.push(element);
     });
@@ -32,18 +41,51 @@ export class TableComponent implements OnInit {
     console.log(this.rows);
   }
 
-  clear(){
+  clear() {
     localStorage.clear();
   }
 
-  delete(index: number){
-    let temp = JSON.parse(localStorage.getItem("items"));
+  // delete(index: number){
+  delete(row: any) {
+    console.log(row);
+    // JSON.stringify(row);
+    let temp: any[] = JSON.parse(localStorage.getItem("items"));
+    // temp.forEach(t => {
+    //   if (
+    //     t.email == row.email &&
+    //     t.number == row.number &&
+    //     t.name == row.name
+    //   ) {
+    //     console.log("this is equal", row, t);
+    //   }
+    // });
+    var index = temp.findIndex(
+      val =>
+        val.email == row.email &&
+        row.number == row.number &&
+        row.name == row.name
+    );
+    console.log(index);
     temp.splice(index, 1);
     localStorage.setItem("items", JSON.stringify(temp));
     this.init();
   }
 
-  filter(event){
+  edit(row: any) {
+    const dialogRef = this.dialog.open(FormDialogComponent, {
+      width: "500px",
+      data: row
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("The dialog was closed");
+      this.init();
+      // this.animal = result;
+    });
+
+  }
+
+  filter(event) {
     this.filteredData = this.rows;
     /*
     let val = event.target.value.toLowerCase();
@@ -62,9 +104,12 @@ export class TableComponent implements OnInit {
 
     // filter our data
     const filteredData = this.temp.filter(function(d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 ||
-       d.email.toLowerCase().indexOf(val) !== -1 ||
-       d.number.toLowerCase().indexOf(val) !== -1 || !val;
+      return (
+        d.name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.number.toLowerCase().indexOf(val) !== -1 ||
+        !val
+      );
     });
 
     // update the rows
@@ -72,5 +117,4 @@ export class TableComponent implements OnInit {
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
-
 }
